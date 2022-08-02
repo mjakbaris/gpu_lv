@@ -243,60 +243,52 @@ int	 rke_solve (rke_variables * var, double *time, double variables[], double ai
     }
     if (within_tolerance)
     {
-     ++(var->accepted_steps);
+	    ++(var->accepted_steps);
 
 	      /* Complete the Runge-Kutta step and return values. */
 
-     for (k = 0; k < var->n_equations; ++k)
-      v[k] = vt[k] + (-a6[k] + a7[k] + a7[k]);
-
-    if (! (*(var->eval_routine)) (*time + whole_step, v, d))
-      return 0;
-
-    *time += whole_step;
-
-    for (k = 0; k < var->n_equations; ++k)
-      variables[k] = vt[k]
-    + (a5[k] + 4.0*a7[k] + half_step*d[k]) / 6.0;
+	    for (k = 0; k < var->n_equations; ++k)
+		    v[k] = vt[k] + (-a6[k] + a7[k] + a7[k]);
+	    if (! (*(var->eval_routine)) (*time + whole_step, v, d))
+		    return 0;
+	    *time += whole_step;
+	    for (k = 0; k < var->n_equations; ++k)
+		    variables[k] = vt[k]
+		    + (a5[k] + 4.0*a7[k] + half_step*d[k]) / 6.0;
 
 	      /* Increment step size if desirable. */
-
-    if (all_errors_small && fabs (whole_step) == var->current_step){
-      if (2 * var->current_step > var->maximum_step){
-        var->current_step = var->maximum_step;
-      }
-      else{
-        var->current_step *= 2;
-      }
+	    if (all_errors_small && fabs (whole_step) == var->current_step){
+		    if (2 * var->current_step > var->maximum_step){
+			    var->current_step = var->maximum_step;
+		    }
+		    else{
+			    var->current_step *= 2;
+		    }
+	    }
     }
-  }
-  else
-  {
-
-   ++var->rejected_steps;
-
-	      /* Decrement step size if possible. */
-
-   if (fabs (whole_step) > var->minimum_step)
-   {
-    if (var->current_step < 2 * var->minimum_step)
-      var->current_step = var->minimum_step;
-    else
-      var->current_step *= 0.5;
-    if (aimed_time > *time)
-      whole_step = var->current_step;
-    else
-      whole_step = - var->current_step;
-  }
-  else
-		return 0;	/* Convergence failed */
-}
-}
-
-while (!within_tolerance);
-}
-  return 1;			/* Convergence succeeded */
-}
+	else
+	{
+		++var->rejected_steps;
+		/* Decrement step size if possible. */
+		if (fabs (whole_step) > var->minimum_step)
+		{
+			if (var->current_step < 2 * var->minimum_step)
+				var->current_step = var->minimum_step;
+			else
+				var->current_step *= 0.5;
+			if (aimed_time > *time)
+				whole_step = var->current_step;
+			else
+				whole_step = - var->current_step;
+		}
+		else
+			return 0;	/* Convergence failed */
+	}
+   }
+	  while (!within_tolerance);
+	  {
+		  return 1;			/* Convergence succeeded */
+	  }
 
 
 
