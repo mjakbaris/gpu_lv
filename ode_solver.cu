@@ -286,9 +286,9 @@ int	 rke_solve (rke_variables * var, double *time, double variables[], double ai
 	}
    }
 	  while (!within_tolerance);
-	  {
-		  return 1;			/* Convergence succeeded */
-	  }
+  }
+	return 1;			/* Convergence succeeded */
+}
 
 
 
